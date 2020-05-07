@@ -1,4 +1,5 @@
-const SystemConfig = require('@/src/config/system.config')
+const SystemConfig = require('./src/config/system.config')
+console.log(SystemConfig);
 
 module.exports = {
     assetsDir: SystemConfig.assetsDir,
