@@ -8,6 +8,9 @@ const getters = {
     },
     userRoutes(state) {
         return state.userStore.userRoutes;
+    },
+    loginStatus(state){
+        return state.userStore.userToken!==''
     }
 }
 export default getters;

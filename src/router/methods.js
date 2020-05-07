@@ -4,7 +4,11 @@ import baseRouter from './baseRouter';
 import { routerConfig } from '@/config/setting'
 const copySystemRouter = deepCopy(systemRouter)
 let [noLoginRouter, loginRouter] = splitRoutesByIsLogin(copySystemRouter)
-const defaultRouter = [...baseRouter, ...noLoginRouter]
+const findBaseRoute = baseRouter.find(r => {
+    return r.path === '/'
+})
+findBaseRoute.children=noLoginRouter
+const defaultRouter = baseRouter
 function splitRoutesByIsLogin(copyRouter) {
     let noLoginRouter = []
     let loginRouter = []

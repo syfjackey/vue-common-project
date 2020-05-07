@@ -1,5 +1,5 @@
 
-import HomeContainer from '@/views/homeContainer'
+import IndexContainer from '@/views/indexContainer'
 import ErrorContainer from '@/views/errorPage/container/indexContainer'
 import Build from '@/views/errorPage/build'
 import Error404 from '@/views/errorPage/404'
@@ -9,7 +9,7 @@ import Error500 from '@/views/errorPage/500'
 const baseRouter = [{
     path: '/',
     name: 'Home',
-    component: HomeContainer,
+    component: IndexContainer,
     redirect:'/viewsSystem'
 },
 {
