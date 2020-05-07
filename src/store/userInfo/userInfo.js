@@ -28,7 +28,7 @@ const userStore = {
             let [userInfo, userToken, userRoutes] = userStore || Storage.getItem(['userInfo', 'userToken', 'userRoutes'])
             let addRoutes
             let routesMap
-            if (userStore) {
+            if (userStore) {                
                 [addRoutes, routesMap] = makeRoutesByStoreInfo(userInfo)
                 userRoutes = routesMap
                 Storage.setItem([{

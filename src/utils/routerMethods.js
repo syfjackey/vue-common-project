@@ -1,15 +1,14 @@
-import systemRouter from './systemRouter'
-import { deepCopy } from '@/utils/common'
-import baseRouter from './baseRouter';
-import { routerConfig } from '@/config/setting'
-const copySystemRouter = deepCopy(systemRouter)
-let [noLoginRouter, loginRouter] = splitRoutesByIsLogin(copySystemRouter)
-const findBaseRoute = baseRouter.find(r => {
-    return r.path === '/'
-})
-findBaseRoute.children=noLoginRouter
-const defaultRouter = baseRouter
-function splitRoutesByIsLogin(copyRouter) {
+function createDefaultRouter(baseRouter, insertRouter, path) {
+    if (path) {
+        const findBaseRoute = baseRouter.find(r => {
+            return r.path === path
+        })
+        findBaseRoute.children = insertRouter
+        return baseRouter
+    }
+    return [...baseRouter, ...insertRouter]
+}
+function splitRoutesByIsLogin(copyRouter, routerConfig) {
     let noLoginRouter = []
     let loginRouter = []
     for (const val of Object.values(copyRouter)) {
@@ -23,7 +22,7 @@ function splitRoutesByIsLogin(copyRouter) {
     }
     return [noLoginRouter, loginRouter]
 }
-function getRightPath(to, { userToken, userInfo }) {
+function getRightPath(to, { userToken, userInfo },routerConfig) {
     if (to.matched.length === 0) { // 如果没匹配到路由 
         return '/error/404'
     }
@@ -61,25 +60,21 @@ function checkRoleString(mRole, { role, level = 0 }, isIncludeType) {
     if (typeof mRole === 'string') {
         let arr = mRole.split('|')
         if (arr[0] === role) {
-
-
             return isIncludeType ? level >= parseInt(arr[1] || 0, 10) : level <= parseInt(arr[1] || 0, 10)
         }
     }
     return false
 }
-
-
-function createRoutesByStoreRoutes(routes) {
-    return routes.length > 0 ? filterRoutesByStoreRoutes(routes) : []
+function createRoutesByStoreRoutes(routes,loginRouter) {
+    return routes.length > 0 ? filterRoutesByStoreRoutes(routes,loginRouter) : []
 }
-function filterRoutesByStoreRoutes(userRoutes) {
+function filterRoutesByStoreRoutes(userRoutes,loginRouter) {
     let addRoutes = []
     for (let i = 0; i < userRoutes.length; i++) {
         let route = userRoutes[i];
         let children = null
         if (route.children && route.children.length > 0) {
-            children = filterRoutesByStoreRoutes(route.children)
+            children = filterRoutesByStoreRoutes(route.children,loginRouter)
         }
         route = replaceNativeRoute(route.fnStr, loginRouter)
         children && (route.children = children)
@@ -92,7 +87,7 @@ function replaceNativeRoute(fnStr, loginRouter) {
     let r = new Function('loginRouter', `return ${fnStr}`)
     return r(loginRouter)
 }
-function createRoutesByUserInfo(userInfo) {
+function createRoutesByUserInfo(userInfo,routerConfig,loginRouter) {
     return filterRoutesByUserInfo(loginRouter, userInfo, routerConfig, 'loginRouter')
 }
 function filterRoutesByUserInfo(routes, userInfo, routerConfig, parentFnStr, parentPath) {
@@ -124,4 +119,4 @@ function filterRoutesByUserInfo(routes, userInfo, routerConfig, parentFnStr, par
     }
     return [addRoutes, routesMap]
 }
-export { defaultRouter, getRightPath, createRoutesByStoreRoutes, createRoutesByUserInfo }
+export { createDefaultRouter, getRightPath, createRoutesByStoreRoutes, createRoutesByUserInfo, splitRoutesByIsLogin }

@@ -16,7 +16,7 @@ class EventBus {
         console.log(key);
         
         const callbacks = this._cacheEventMap[key]
-        callbacks.forEach(fn => fn(...args))
+        callbacks&&callbacks.forEach(fn => fn(...args))
     }
     static once(key, fn) {
         let wrapFanc = (...args) => {
