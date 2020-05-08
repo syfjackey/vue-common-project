@@ -34,7 +34,7 @@ router.beforeEach((to, from, next) => {
       userToken: store.getters.userToken,
       userInfo: store.getters.userInfo
     }
-    let path = getRightPath(to, UserStore,routerConfig)
+    let path = getRightPath(to, UserStore,routerConfig,'/error/404')
     path ? next({path}) : next()
   })
 })

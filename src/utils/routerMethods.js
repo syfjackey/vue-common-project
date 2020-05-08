@@ -24,9 +24,9 @@ function splitRoutesByIsLogin(baseRoutes, systemRoutes, routerConfig,path) {
     const defaultRouter = createDefaultRoutes(baseRoutes, mergeRoutes,path)
     return [defaultRouter, addRoutes]
 }
-function getRightPath(to, { userToken, userInfo }, routerConfig) {
+function getRightPath(to, { userToken, userInfo }, routerConfig,path404) {
     if (to.matched.length === 0) { // 如果没匹配到路由 
-        return '/error/404'
+        return path404
     }
     if (to.path === routerConfig.loginPath && userToken) {
         return routerConfig.loginRedirect
