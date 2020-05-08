@@ -1,28 +1,30 @@
-function createDefaultRouter(baseRouter, insertRouter, path) {
+function createDefaultRoutes(baseRoutes, mergeRoutes, path) {
+    if (mergeRoutes.length === 0) return baseRoutes
     if (path) {
-        const findBaseRoute = baseRouter.find(r => {
+        const findBaseRoute = baseRoutes.find(r => {
             return r.path === path
         })
-        findBaseRoute.children = insertRouter
-        return baseRouter
+        findBaseRoute.children = findBaseRoute.children ? [...findBaseRoute.children, ...mergeRoutes] : mergeRoutes
+        return baseRoutes
     }
-    return [...baseRouter, ...insertRouter]
+    return [...baseRoutes, ...mergeRoutes]
 }
-function splitRoutesByIsLogin(copyRouter, routerConfig) {
-    let noLoginRouter = []
-    let loginRouter = []
-    for (const val of Object.values(copyRouter)) {
+function splitRoutesByIsLogin(baseRoutes, systemRoutes, routerConfig) {
+    let mergeRoutes = []
+    let addRoutes = []
+    for (const val of Object.values(systemRoutes)) {
         if (Array.isArray(val)) {
             val.forEach(v => {
-                v.meta && v.meta[routerConfig.loginMeta] ? loginRouter.push(v) : noLoginRouter.push(v)
+                v.meta && v.meta[routerConfig.loginMeta] ? addRoutes.push(v) : mergeRoutes.push(v)
             })
         } else {
-            val.meta && val.meta[routerConfig.loginMeta] ? loginRouter.push(val) : noLoginRouter.push(val)
+            val.meta && val.meta[routerConfig.loginMeta] ? addRoutes.push(val) : mergeRoutes.push(val)
         }
     }
-    return [noLoginRouter, loginRouter]
+    const defaultRouter = createDefaultRoutes(baseRoutes, mergeRoutes)
+    return [defaultRouter, addRoutes]
 }
-function getRightPath(to, { userToken, userInfo },routerConfig) {
+function getRightPath(to, { userToken, userInfo }, routerConfig) {
     if (to.matched.length === 0) { // 如果没匹配到路由 
         return '/error/404'
     }
@@ -65,16 +67,16 @@ function checkRoleString(mRole, { role, level = 0 }, isIncludeType) {
     }
     return false
 }
-function createRoutesByStoreRoutes(routes,loginRouter) {
-    return routes.length > 0 ? filterRoutesByStoreRoutes(routes,loginRouter) : []
+function createRoutesByStoreRoutes(routes, loginRouter) {
+    return routes.length > 0 ? filterRoutesByStoreRoutes(routes, loginRouter) : []
 }
-function filterRoutesByStoreRoutes(userRoutes,loginRouter) {
+function filterRoutesByStoreRoutes(userRoutes, loginRouter) {
     let addRoutes = []
     for (let i = 0; i < userRoutes.length; i++) {
         let route = userRoutes[i];
         let children = null
         if (route.children && route.children.length > 0) {
-            children = filterRoutesByStoreRoutes(route.children,loginRouter)
+            children = filterRoutesByStoreRoutes(route.children, loginRouter)
         }
         route = replaceNativeRoute(route.fnStr, loginRouter)
         children && (route.children = children)
@@ -87,7 +89,7 @@ function replaceNativeRoute(fnStr, loginRouter) {
     let r = new Function('loginRouter', `return ${fnStr}`)
     return r(loginRouter)
 }
-function createRoutesByUserInfo(userInfo,routerConfig,loginRouter) {
+function createRoutesByUserInfo(userInfo, routerConfig, loginRouter) {
     return filterRoutesByUserInfo(loginRouter, userInfo, routerConfig, 'loginRouter')
 }
 function filterRoutesByUserInfo(routes, userInfo, routerConfig, parentFnStr, parentPath) {
@@ -119,4 +121,4 @@ function filterRoutesByUserInfo(routes, userInfo, routerConfig, parentFnStr, par
     }
     return [addRoutes, routesMap]
 }
-export { createDefaultRouter, getRightPath, createRoutesByStoreRoutes, createRoutesByUserInfo, splitRoutesByIsLogin }
+export { getRightPath, createRoutesByStoreRoutes, createRoutesByUserInfo, splitRoutesByIsLogin }

@@ -6,7 +6,7 @@ import Error404 from '@/views/errorPage/404'
 import Error500 from '@/views/errorPage/500'
 
 // 默认路由表
-const baseRouter = [{
+const baseRoutes = [{
     path: '/',
     name: 'Home',
     component: IndexContainer,
@@ -35,4 +35,4 @@ const baseRouter = [{
 }
 ]
 
-export default baseRouter
+export default baseRoutes

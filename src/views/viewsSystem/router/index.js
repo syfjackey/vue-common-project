@@ -1,9 +1,7 @@
 import IndexContainer from '@/views/viewsSystem/container/indexContainer'
-import no from './../test/router/no';
 export default [{
     path: '/viewsSystem',
-    name: 'viewsHome',
+    name: 'viewsIndex',
     component: IndexContainer,
-    redirect:'/viewsSystem/test',
-    children:[...no]
+    // redirect: '/viewsSystem/test'
 }]

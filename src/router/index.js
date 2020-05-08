@@ -4,15 +4,14 @@ import Storage from 'sync-storage-listener';
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import store from '@/store';
-import { createDefaultRouter, getRightPath, createRoutesByStoreRoutes, createRoutesByUserInfo,splitRoutesByIsLogin} from '@/utils/routerMethods';
-import systemRouter from './systemRouter'
-import baseRouter from './baseRouter';
+import {getRightPath, createRoutesByStoreRoutes, createRoutesByUserInfo,splitRoutesByIsLogin} from '@/utils/routerMethods';
+import systemRoutes from './systemRoutes'
+import baseRoutes from './baseRoutes';
 import { deepCopy } from '@/utils/common'
 import { routerConfig } from '@/config/setting'
 import EventBus from '@/utils/eventbus';
-const copySystemRouter = deepCopy(systemRouter)
-let [noLoginRouter, loginRouter] = splitRoutesByIsLogin(copySystemRouter,routerConfig)
-const defaultRouter= createDefaultRouter(baseRouter,noLoginRouter)
+const copySystemRouter = deepCopy(systemRoutes)
+const [defaultRoutes,addSystemRoutes]=splitRoutesByIsLogin(baseRoutes,copySystemRouter,routerConfig)
 NProgress.configure({ showSpinner: false })
 Vue.use(VueRouter)
 EventBus.on('login', emitLogin)
@@ -26,7 +25,7 @@ function emitLogout() {
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes: defaultRouter,
+  routes: defaultRoutes,
 })
 router.beforeEach((to, from, next) => { 
   NProgress.start();
@@ -42,12 +41,10 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   NProgress.done()
 })
-export function fixRoutes(addRoutes, userRoutes) {
-  console.log(addRoutes, userRoutes);
-  
-  return router.addRoutes(addRoutes || createRoutesByStoreRoutes(userRoutes,loginRouter))
+export function fixRoutes(addRoutes, userRoutes) {  
+  return router.addRoutes(addRoutes || createRoutesByStoreRoutes(userRoutes,addSystemRoutes))
 }
 export function makeRoutesByStoreInfo(userInfo) {
-  return createRoutesByUserInfo(userInfo,routerConfig,loginRouter)
+  return createRoutesByUserInfo(userInfo,routerConfig,addSystemRoutes)
 }
 export default router

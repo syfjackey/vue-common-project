@@ -4,8 +4,8 @@ const routerConfig = {
     unRoleMeta: 'urole',
     loginMeta: 'requiresAuth',
     loginPath: '/login',
-    unLoginRedirect: '/xxxx',
-    loginRedirect: '/xx',
+    unLoginRedirect: '/login',
+    loginRedirect: '/manageSystem',
 }
 const ajaxConfig = {
     baseURL: process.env.NODE_ENV === 'production' ? '' : '',
