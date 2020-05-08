@@ -11,7 +11,7 @@ import { deepCopy } from '@/utils/common'
 import { routerConfig } from '@/config/setting'
 import EventBus from '@/utils/eventbus';
 const copySystemRouter = deepCopy(systemRoutes)
-const [defaultRoutes,addSystemRoutes]=splitRoutesByIsLogin(baseRoutes,copySystemRouter,routerConfig)
+const [defaultRoutes,addSystemRoutes]=splitRoutesByIsLogin(baseRoutes,copySystemRouter,routerConfig,'/')
 NProgress.configure({ showSpinner: false })
 Vue.use(VueRouter)
 EventBus.on('login', emitLogin)

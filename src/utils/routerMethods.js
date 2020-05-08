@@ -9,7 +9,7 @@ function createDefaultRoutes(baseRoutes, mergeRoutes, path) {
     }
     return [...baseRoutes, ...mergeRoutes]
 }
-function splitRoutesByIsLogin(baseRoutes, systemRoutes, routerConfig) {
+function splitRoutesByIsLogin(baseRoutes, systemRoutes, routerConfig,path) {
     let mergeRoutes = []
     let addRoutes = []
     for (const val of Object.values(systemRoutes)) {
@@ -21,7 +21,7 @@ function splitRoutesByIsLogin(baseRoutes, systemRoutes, routerConfig) {
             val.meta && val.meta[routerConfig.loginMeta] ? addRoutes.push(val) : mergeRoutes.push(val)
         }
     }
-    const defaultRouter = createDefaultRoutes(baseRoutes, mergeRoutes)
+    const defaultRouter = createDefaultRoutes(baseRoutes, mergeRoutes,path)
     return [defaultRouter, addRoutes]
 }
 function getRightPath(to, { userToken, userInfo }, routerConfig) {
