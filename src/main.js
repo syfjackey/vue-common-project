@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import mountVue from '@/utils/mountVue'
+import '@/assets/icons' // 导入icons
 import { openMock, storageConfig, ajaxConfig } from '@/config/setting'
 Vue.config.productionTip = false
 Vue.use(mountVue, { storageConfig, ajaxConfig })
