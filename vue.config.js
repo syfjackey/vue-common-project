@@ -28,7 +28,7 @@ module.exports = {
             .use('svg-sprite-loader')
             .loader('svg-sprite-loader')
             .options({
-                symbolId: 'icon-[name]'
+                symbolId: `${SystemConfig.iconPrefix}-[name]`
             })
             .end()
         if (IS_PROD) {
