@@ -32,7 +32,7 @@ module.exports = {
             })
             .end()
         if (IS_PROD) {
-            //     // 需要翻墙安装 npm i -D image-webpack-loader
+            //     // 需设置dns  npm i -D image-webpack-loader
             //     // config.module
             //     // .rule("images")
             //     // .use("image-webpack-loader")
