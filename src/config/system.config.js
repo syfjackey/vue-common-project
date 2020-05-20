@@ -1,6 +1,6 @@
 module.exports = {
-  title: 'vue 单页面 通用框架',
-  publicPath: '/',
-  assetsDir: '',
-  iconPrefix: 'icon'
+    title: '信易贷',
+    publicPath: '/',
+    assetsDir: '',
+    openCdn: false
 }
